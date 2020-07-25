@@ -6,9 +6,9 @@ from django.shortcuts import render_to_response
 # в качестве хранилища количества показов и количества переходов.
 # но помните, что в реальных проектах так не стоит делать
 # так как при перезапуске приложения они обнулятся
+#TODO Не понял как реализовать каунтер. Не понял как сделать так чтобы каунтер принимал не почарово а пострингово.
 counter_show = Counter()
 counter_click = Counter()
-
 
 def index(request):
     # Реализуйте логику подсчета количества переходов с лендига по GET параметру from-landing
@@ -20,7 +20,13 @@ def landing(request):
     # в зависимости от GET параметра ab-test-arg
     # который может принимать значения original и test
     # Так же реализуйте логику подсчета количества показов
-    return render_to_response('landing.html')
+    landchoice = request.GET.get('ab-test-arg', 'original')
+    if(landchoice=="original"):
+        counter_show.update("O")
+        return render_to_response('landing.html')
+    else:
+        counter_show.update("T")
+        return render_to_response('landing_alternate.html')
 
 
 def stats(request):
